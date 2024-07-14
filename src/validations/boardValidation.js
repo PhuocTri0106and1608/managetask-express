@@ -11,13 +11,7 @@ const createNew = async (req, res, next) => {
       'string.max': 'Title length must less than or equal to 50 characters long',
       'string.trim': 'Title must bot have leading or trailing whitespace'
     }),
-    description: Joi.string().required().min(3).max(256).trim().strict().messages({
-      'any.required': 'Description is required',
-      'string.empty': 'Description is not allowed to be empty',
-      'string.min': 'Description length must be at least 3 characters long',
-      'string.max': 'Description length must less than or equal to 256 characters long',
-      'string.trim': 'Description must bot have leading or trailing whitespace'
-    })
+    description: Joi.string().required().min(3).max(256).trim().strict()
   })
 
   try {
