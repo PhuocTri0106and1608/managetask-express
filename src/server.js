@@ -1,21 +1,22 @@
 /* eslint-disable no-console */
 import express from 'express'
 import exitHook from 'async-exit-hook'
-import { CLOSE_DB, CONNECT_DB, GET_DB } from '~/config/mongodb'
+import { CLOSE_DB, CONNECT_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
+import { APIs_V1 } from '~/routes/v1'
+import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 
 const START_SERVER = () => {
   const app = express()
-  const hostname = 'localhost'
-  const port = 3000
 
-  app.get('/', async(req, res) => {
-    console.log(await GET_DB().listCollections().toArray())
-    res.send('<h1>Hello</h1>')
-  })
+  app.use(express.json())
+  app.use('/v1', APIs_V1)
 
-  app.listen(port, hostname, () => {
-    console.log(`3. Hi ${env.AUTHOR}, Server is running at http://${ hostname }:${ port }/`)
+  //Middleware xử lý lỗi tập trung
+  app.use(errorHandlingMiddleware)
+
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
+    console.log(`3. Hi ${env.AUTHOR}, Server is running at http://${env.APP_HOST}:${env.APP_PORT}/`)
   })
   //Clean up trước khi close
   exitHook(() => {
